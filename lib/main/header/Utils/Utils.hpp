@@ -10,6 +10,7 @@
 
 #include "Utils/defs.hpp"
 #include "Utils/error.hpp"
+#include "Utils/hwInfo.hpp"
 #include "Utils/file.hpp"
 
 #endif

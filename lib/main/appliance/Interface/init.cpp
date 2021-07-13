@@ -6,6 +6,8 @@
 //===----------------------------------------------------------===//
 
 #include "Interface/init.hpp"
+
+#include "Alg/eratSieve.hpp"
 #include "Utils/error.hpp"
 #include "Utils/file.hpp"
 #include "Utils/num.hpp"
@@ -18,20 +20,12 @@ using namespace std;
 
 namespace Interface {
 
-init::init(int argc, char** argv) : twoToN(nullptr)
+init::init(int argc, char** argv)
 {
   validateArguments(argc, argv);
   processEntries(argc, argv);
-}
 
-init::~init()
-{
-  destroy();
-}
-
-void init::destroy()
-{
-  delete twoToN;
+  Alg::eratSieve{&cinfo};
 }
 
 void init::validateArguments(int argc, char** argv) 
@@ -62,7 +56,7 @@ void init::validateArguments(int argc, char** argv)
 
 void init::processEntries(int argc, char** argv) noexcept(false)
 {
-  
+  Utils::hwInfo::fetchCacheInfo(&cinfo, LEVEL1, DATA_CACHE);
 }
 
 }

@@ -8,5 +8,6 @@
 #ifndef ALG_H
 #define ALG_H
 
+#include "Alg/eratSieve.hpp"
 
 #endif
