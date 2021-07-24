@@ -12,7 +12,7 @@
 
 // Put here any debugging control macros.
 #define INTERFACE_INIT_DEBUG 1
-#define INTERFACE_INIT_PRINT_GRAPH 1
+#define ALG_ERATSIEVE_DEBUG 0
 
 #endif // #ifndef DEFS_H
 ////////////////////////////////////////////////////////////////////

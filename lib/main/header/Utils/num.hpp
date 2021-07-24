@@ -17,14 +17,20 @@ namespace Utils {
 template <typename numType>
 class num {
 public:
-  static void checkInRange(const numType& n, const numType& l, 
-                      const numType& r) noexcept(false)
+  static inline void checkInRange(const numType& n, 
+                                  const numType& l, 
+                                  const numType& r) noexcept(false)
   {
     if (n < l || n > r) {
       throw std::logic_error{
         std::to_string(n) + " out of range (" + std::to_string(l) +
           ", " + std::to_string(r) + ")"};
     }
+  }
+
+  static inline numType min(const numType a, const numType b)
+  {
+    return a < b ? a : b;
   }
 };
 

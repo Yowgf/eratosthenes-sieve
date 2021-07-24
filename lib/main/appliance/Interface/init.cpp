@@ -20,16 +20,29 @@ using namespace std;
 
 namespace Interface {
 
-init::init(int argc, char** argv)
+init::init(int argc, char** argv) 
+  : arrRightLim(0), outMode('\0'), shouldPrintList(false), 
+    shouldPrintTime(false)
 {
-  validateArguments(argc, argv);
+  setAndValidateArguments(argc, argv);
   processEntries(argc, argv);
 
-  Alg::eratSieve{&cinfo};
+  Alg::eratSieve{&cinfo, static_cast<unsigned>(arrRightLim),
+      primesList};
 }
 
-void init::validateArguments(int argc, char** argv) 
-  const noexcept(false)
+init::~init()
+{
+  destroy();
+}
+
+void init::destroy()
+{
+  printOutput();
+}
+
+void init::setAndValidateArguments(int argc, char** argv) 
+  noexcept(false)
 {
   if (argc != knumProgArgs) {
     throw std::invalid_argument {
@@ -38,25 +51,59 @@ void init::validateArguments(int argc, char** argv)
         "<program> <array-right-limit> (l | t | a)"};
   }
 
-  const int arrRightLim = atoi(argv[1]);
+  arrRightLim = atoi(argv[1]);
   num<int>::checkInRange(arrRightLim, kminRightLim, kmaxRightLim);
 
-  const char outMode = argv[2][0];
+  outMode = argv[2][0];
   switch(outMode) {
-    case 'l':
-    case 't':
-    case 'a':
+    case 'l': // List
+    case 't': // Time
+    case 'a': // All
       break;
     default:
       throw std::invalid_argument {
         string("Invalid output mode '") + argv[2] + '\''};
   }
-
 }
 
 void init::processEntries(int argc, char** argv) noexcept(false)
 {
   Utils::hwInfo::fetchCacheInfo(&cinfo, LEVEL1, DATA_CACHE);
+
+  switch(outMode) {
+    case 'l': // List
+      shouldPrintList = true;
+      break;
+    case 't': // Time
+      shouldPrintTime = true;
+      break;
+    case 'a': // All
+      shouldPrintList = shouldPrintTime = true;
+      break;
+  }
+}
+
+void init::printOutput()
+{
+  if (shouldPrintList) {
+    printOutList();
+  }
+  if (shouldPrintTime) {
+    printOutList();
+  }
+}
+
+void init::printOutList()
+{
+  for (auto it = primesList.begin(); it != primesList.end(); ++it) {
+    cout << *it << ' ';
+  }
+  cout << '\n';
+}
+
+void init::printOutTime()
+{
+  "NotImplemented"; // Waiting timing framework
 }
 
 }

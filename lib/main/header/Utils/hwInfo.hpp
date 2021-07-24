@@ -24,6 +24,7 @@ struct cacheInfo {
 
   int level = -1;
 
+// FIXME: these values are not initialized in fetchCacheInfo
 #if defined(__linux__)
   int id = -1;
   int numberOfSets = -1;
