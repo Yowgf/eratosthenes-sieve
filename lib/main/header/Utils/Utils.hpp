@@ -12,5 +12,6 @@
 #include "Utils/error.hpp"
 #include "Utils/hwInfo.hpp"
 #include "Utils/file.hpp"
+#include "Utils/time.hpp"
 
 #endif

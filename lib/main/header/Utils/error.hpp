@@ -25,7 +25,7 @@ namespace Utils {
 // Log attribute att.
 #define LOGATT(isSupposedToPrint, att)              \
   if (isSupposedToPrint) {                          \
-    (void) (cerr << #att << ": " << (att) << '\n'); \
+    (void) (std::cerr << #att << ": " << (att) << '\n'); \
   }
 
 // For the first two logging functions, it is not always certain

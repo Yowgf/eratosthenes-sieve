@@ -6,7 +6,7 @@
 # ------------------------------------------------------------------------------
 
 # Compiler command and flags
-CXX   := 
+CXX   := g++
 FLAGS := -std=c++14 -g -Wextra
 
 # Source directory

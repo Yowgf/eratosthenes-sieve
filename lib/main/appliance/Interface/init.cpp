@@ -12,6 +12,7 @@
 #include "Utils/file.hpp"
 #include "Utils/num.hpp"
 
+#include <iomanip>
 #include <iostream>
 #include <stdexcept>
 
@@ -22,13 +23,12 @@ namespace Interface {
 
 init::init(int argc, char** argv) 
   : arrRightLim(0), outMode('\0'), shouldPrintList(false), 
-    shouldPrintTime(false)
+    shouldPrintTime(false), clkVar(0)
 {
   setAndValidateArguments(argc, argv);
   processEntries(argc, argv);
 
-  Alg::eratSieve{&cinfo, static_cast<unsigned>(arrRightLim),
-      primesList};
+  TIME_EXECUTION(clkVar, Alg::eratSieve(&cinfo, static_cast<unsigned>(arrRightLim), primesList));
 }
 
 init::~init()
@@ -89,21 +89,21 @@ void init::printOutput()
     printOutList();
   }
   if (shouldPrintTime) {
-    printOutList();
+    printOutTime();
   }
 }
 
 void init::printOutList()
 {
-  for (auto it = primesList.begin(); it != primesList.end(); ++it) {
-    cout << *it << ' ';
+  for (auto prime : primesList) {
+    cout << prime << ' ';
   }
   cout << '\n';
 }
 
 void init::printOutTime()
 {
-  "NotImplemented"; // Waiting timing framework
+  cout << setprecision(6) << fixed << clkVar.count() << '\n';
 }
 
 }

@@ -14,6 +14,7 @@
 #include "DS/array.hpp"
 #include "Utils/defs.hpp"
 #include "Utils/hwInfo.hpp"
+#include "Utils/time.hpp"
 
 #include <fstream>
 #include <list>
@@ -37,7 +38,6 @@ private:
   // Program entries
   int arrRightLim;
   char outMode;
-
 
   // processEntries build this object for the algorithm.
   Utils::cacheInfo cinfo;
@@ -66,6 +66,7 @@ private:
   // Decided according to outMode in processEntries
   bool shouldPrintList;
   bool shouldPrintTime;
+  std::chrono::duration<double> clkVar;
 
   // We pass this as an argument to the algorithm, and let it take
   // care of the rest.

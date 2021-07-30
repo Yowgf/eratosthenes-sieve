@@ -68,17 +68,29 @@ private:
 
   inline void moveLeftMarkToRight()
   {
-    LOG(1, "M%d", markedElemsLeftLim);
-    // Move markedElemsLeftLim to the right as far as possible
-    while (markVec[markedElemsLeftLim % markVec.size()] 
-           && markedElemsLeftLim < markVec.size() - 1) {
+    while (markVec[markedElemsLeftLim % markVec.size()]) {
       ++markedElemsLeftLim;
     }
   }
 
+
+  // Marks everything and adds it to the curPrimes list!
+  inline void allUnmarkedArePrimes(const unsigned vecLeftLim)
+  {
+    for (; markedElemsLeftLim < vecLeftLim + markVec.size();
+         ++markedElemsLeftLim) {
+      if (!markVec[markedElemsLeftLim % markVec.size()]) {
+        ++numMarkedElems;                     
+        // Don't even need to set markVec[...] = 1, since the
+        // vectore is resetted just after
+        curPrimes.push_back(markedElemsLeftLim);
+      }        
+    }
+    resetMarkVec();
+  }
+
   inline void resetMarkVec()
   {
-    LOG(1, "Resetting vector");
     numMarkedElems = 0;
     markVec.reset();
   }
