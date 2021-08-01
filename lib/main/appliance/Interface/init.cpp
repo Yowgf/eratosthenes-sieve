@@ -18,6 +18,7 @@
 
 using namespace Utils;
 using namespace std;
+using primeT = unsigned;
 
 namespace Interface {
 
@@ -25,10 +26,18 @@ init::init(int argc, char** argv)
   : arrRightLim(0), outMode('\0'), shouldPrintList(false), 
     shouldPrintTime(false), clkVar(0)
 {
+  setMPIVariables();
+  allocatePrimesList();
+
+  // TODO: not separating argc/argv reading into processes might
+  // produce a bug.
   setAndValidateArguments(argc, argv);
   processEntries(argc, argv);
 
-  TIME_EXECUTION(clkVar, Alg::eratSieve(&cinfo, static_cast<unsigned>(arrRightLim), primesList));
+  TIME_EXECUTION(clkVar, 
+                 Alg::eratSieve(&cinfo, 
+                                static_cast<unsigned>(arrRightLim),
+                                primesList));
 }
 
 init::~init()
@@ -39,6 +48,18 @@ init::~init()
 void init::destroy()
 {
   printOutput();
+  delete primesList;
+}
+
+void init::setMPIVariables()
+{
+  MPI_Comm_rank(MPI_COMM_WORLD, &myProcRank);
+  MPI_Comm_size(MPI_COMM_WORLD, &commSz);
+}
+
+void init::allocatePrimesList()
+{
+  primesList = new std::vector<primeT>;
 }
 
 void init::setAndValidateArguments(int argc, char** argv) 
@@ -86,7 +107,9 @@ void init::processEntries(int argc, char** argv) noexcept(false)
 void init::printOutput()
 {
   if (shouldPrintList) {
-    printOutList();
+    if (myProcRank == 0) {
+      printOutList();
+    }
   }
   if (shouldPrintTime) {
     printOutTime();
@@ -95,15 +118,31 @@ void init::printOutput()
 
 void init::printOutList()
 {
-  for (auto prime : primesList) {
+  for (auto prime : *primesList) {
+#   if INTERFACE_INIT_DEBUG_PRINT_GREATER_THAN != 0
+    if (prime > INTERFACE_INIT_DEBUG_PRINT_GREATER_THAN) {
+#   endif
+
     cout << prime << ' ';
+
+#   if INTERFACE_INIT_DEBUG_PRINT_GREATER_THAN != 0
+    }
+#   endif
   }
   cout << '\n';
 }
 
 void init::printOutTime()
 {
-  cout << setprecision(6) << fixed << clkVar.count() << '\n';
+  double globalClkCount = clkVar.count();
+  double myClkCount = clkVar.count();
+
+  MPI_Reduce(&myClkCount, &globalClkCount, 1, MPI::DOUBLE, MPI::MAX,
+             0, MPI_COMM_WORLD);
+
+  if (myProcRank == 0) {
+    cout << setprecision(6) << std::fixed << globalClkCount << '\n';
+  }
 }
 
 }

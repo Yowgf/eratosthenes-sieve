@@ -32,6 +32,11 @@ public:
   {
     return a < b ? a : b;
   }
+
+  static inline numType max(const numType a, const numType b)
+  {
+    return a > b ? a : b;
+  }  
 };
 
 }

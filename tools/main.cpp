@@ -14,10 +14,13 @@
 #include <cerrno>
 #include <iostream>
 
+#include "mpi.h"
+
 using namespace std;
 
 int main(int argc, char** argv)
 {
+  MPI_Init(&argc, &argv);
   try {
     Interface::init(argc, argv);
   }
@@ -27,6 +30,7 @@ int main(int argc, char** argv)
          << e.what() << "\n"\
       "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
   }
-    
-  return errno;
+
+  MPI_Finalize();
+  return 0;
 }

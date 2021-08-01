@@ -17,7 +17,9 @@
 #include "Utils/time.hpp"
 
 #include <fstream>
-#include <list>
+#include <vector>
+
+#include "mpi.h"
 
 namespace Interface {
 
@@ -35,12 +37,22 @@ private:
   const int kminRightLim = 2;
   const int kmaxRightLim = 1e9;
 
+  // MPI variables
+  int myProcRank;
+  int commSz;
+
   // Program entries
   int arrRightLim;
   char outMode;
 
   // processEntries build this object for the algorithm.
   Utils::cacheInfo cinfo;
+
+  //===--------------------------------------------------------===//
+  // Procedures
+  //===--------------------------------------------------------===//
+  void setMPIVariables();
+  void allocatePrimesList();
 
   // Performs some basic validation on the program arguments.
   //
@@ -70,7 +82,7 @@ private:
 
   // We pass this as an argument to the algorithm, and let it take
   // care of the rest.
-  std::list<primeT> primesList;
+  std::vector<primeT>* primesList;
 
   // Prints output, according to outMode
   void printOutput();
