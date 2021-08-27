@@ -12,7 +12,7 @@
 
 // Put here any debugging control macros.
 #define INTERFACE_INIT_DEBUG 0
-#define INTERFACE_INIT_DEBUG_PRINT_GREATER_THAN 900000
+//#define INTERFACE_INIT_DEBUG_PRINT_GREATER_THAN 900000
 #define ALG_ERATSIEVE_DEBUG 0
 
 // MPI macros

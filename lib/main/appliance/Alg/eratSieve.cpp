@@ -5,9 +5,6 @@
 // of the eratosthenes sieve algorithm.
 //===----------------------------------------------------------===//
 
-// TODO: heuristics to not have to compare all the primes in the
-// list.
-
 #include "Alg/eratSieve.hpp"
 #include "Utils/error.hpp"
 #include "Utils/num.hpp"
@@ -122,12 +119,14 @@ void eratSieve::markPrimesLocal()
   LOG(ALG_ERATSIEVE_DEBUG, "P%d myLLlimit, myRLimit: %u, %u", 
       myProcRank, myLLimit, myRLimit);
 
-  // Fixme: add loop
+
 
   windowLeftLim = markedElemsLeftLim = myLLimit;
  
   findPrimesBetween(myLLimit, myRLimit);
-  
+
+  // Fixme: add loop with fusing, to support numbers greater than
+  // the size of the window squared.
   fuseCurPrimesGlobal(myLLimit, myRLimit);
 
   LOG(ALG_ERATSIEVE_DEBUG, "P%d Out markPrimesLocal", myProcRank);
@@ -217,7 +216,8 @@ void eratSieve::fuseCurPrimesGlobal(const unsigned myLeftLim,
                  num<unsigned>::min(recvSz, interProcBusWidth),
                  MPI::UNSIGNED, i + 1, 0, MPI_COMM_WORLD, &status);
 
-        // FIXME: this copy can be made quite more efficient
+        // FIXME: this copying process can be made quite more
+        // efficient
         for (unsigned ii = 0; 
              ii < num<primeT>::min(status._ucount / sizeof(primeT), 
                                           numPrimesNotRcvd);
